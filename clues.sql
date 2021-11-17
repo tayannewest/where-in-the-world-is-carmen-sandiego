@@ -2,8 +2,11 @@
 -- description has been traveling through Southern Europe. She's most 
 -- likely traveling someplace where she won't be noticed, so find the least
 -- populated country in Southern Europe, and we'll start looking for her there.
- 
+
+
 -- TODO: Write SQL query here
+carmen=# SELECT region, name FROM country ORDER BY population ASC;
+--  Southern Europe           | Holy See (Vatican City State)                | VAT
 
 
 -- Clue #2: Now that we're here, we have insight that Carmen was seen attending 
@@ -12,11 +15,23 @@
 -- call in a translator to work with you.
 
 -- TODO: Write SQL query here
+carmen=# SELECT language, isofficial  FROM countrylanguage WHERE countrycode = 'VAT';
+--  language | isofficial 
+-- ----------+------------
+--  Italian  | t
 
 
 -- Clue #3: We have new news on the classes Carmen attended – our gumshoes tell us she's moved on to a different country, a country where people speak only the language she was learning. Find out which nearby country speaks nothing but that language.
 
 -- TODO: Write SQL query here
+carmen=# SELECT language, percentage, countrycode FROM countrylanguage WHERE language = 'Italian' AND percentage = '100';
+--  language | percentage | countrycode 
+-- ----------+------------+-------------
+--  Italian  |        100 | SMR
+carmen=# SELECT code, name FROM country WHERE code = 'SMR';
+--  code |    name    
+-- ------+------------
+--  SMR  | San Marino
 
 
 -- Clue #4: We're booking the first flight out – maybe we've actually got a 
@@ -26,6 +41,11 @@
 -- that country she might be flying to.
 
 -- TODO: Write SQL query here
+carmen=# SELECT name FROM city WHERE countrycode = 'SMR';
+--     name    
+-- ------------
+--  Serravalle << Gotta be this one
+--  San Marino
 
 
 -- Clue #5: Oh no, she pulled a switch – there are two cities with very similar 
@@ -35,6 +55,15 @@
 -- search for what country it's in. Hurry!
 
 -- TODO: Write SQL query here
+carmen=# SELECT * from city WHERE name LIKE 'Serra%';
+--   id  |    name    | countrycode |     district      | population 
+-- ------+------------+-------------+-------------------+------------
+--   265 | Serra      | BRA         | Esp�rito Santo  |     302666
+--  3170 | Serravalle | SMR         | Serravalle/Dogano |       4802
+carmen=# SELECT name FROM country WHERE code = 'BRA';
+--   name  
+-- --------
+--  Brazil <<< yep that's in South America
 
 
 -- Clue #6: We're close! Our South American agent says she just got a taxi at
@@ -43,6 +72,15 @@
 -- we'll follow right behind you!
 
 -- TODO: Write SQL query here
+carmen=# SELECT capital FROM country WHERE name = 'Brazil';
+--  capital 
+-- ---------
+--      211
+carmen=# SELECT name FROM city WHERE id = '211';
+--     name    
+-- ------------
+--  Brasília
+
 
 
 -- Clue #7: She knows we're on to her – her taxi dropped her off at the 
@@ -66,3 +104,7 @@
 
 -- TODO: Write SQL query here
 
+carmen=# SELECT name FROM city WHERE population = '91084';
+--      name     
+-- --------------
+--  Santa Monica
